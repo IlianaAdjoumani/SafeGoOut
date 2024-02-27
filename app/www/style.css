@@ -107,3 +107,49 @@ div {
     background-color: white;
 }
 
+.info-box-icon {
+  color: lightpink;
+  height: 80px;
+}
+
+.info-box-text, .progress-description {
+    color: lightpink;
+    font-weight: bold;
+    font-family: math;
+    font-size: small;
+}
+
+.contactinfo{
+  color: black;
+  font-weight: italic;
+}
+
+.info-box-number {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+b, strong {
+    font-weight: 800;
+    color: pink;
+    font-size: small;
+    font-family: 'cursive';
+}
+
+.btn-default {
+    background-color: #3c8dbc!important;
+    color: lightpink;
+    border-color: lightpink;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.info-box {
+    min-height: 70px;
+    margin-bottom: 10px;
+}
+
+.spacing {
+  padding-left:100px;
+  font-size: 18px;
+}

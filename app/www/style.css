@@ -1,0 +1,109 @@
+/******************************************************************/
+/* This is the css sheet for the Women's Rights Buildathon        */
+/*                                                                */
+/******************************************************************/
+
+/******************************************************************/
+/* Main, overall styles                                           */
+/******************************************************************/
+body {
+    font-family: 'Lora', serif !important;
+    background: linear-gradient(to bottom, #fcecfc 68%, #ffbde4 100%)!important;
+}
+
+
+.h4, .h5, .h6, h4, h5, h6  {
+    font-family: 'Lora', serif !important;
+/*    color: #000000; */
+	  line-height: 1.6rem;
+    font-weight: normal;
+}
+
+.main-container {
+  margin-left: 200px !important;
+  /*margin-top: 8.25rem; */ /* only to be used when using a header*/
+  font-family: 'Lora', serif !important;
+}
+
+
+.well {
+  background-color: #ffa3d0;
+  border-radius: 20px;
+}
+
+.selectize-input {
+  color: #e60082;
+  font-family: 'Lora', serif !important;
+}
+
+
+.selectize-dropdown, .selectize-input, .selectize-input input {
+    background: white;
+}
+
+.selectize-control.single .selectize-input.input-active {
+    background: #e60082;
+    color: white;
+}
+
+.selectize-dropdown-content .option:hover {
+    background: #e60082;
+    color: white;
+}
+
+.selectize-input.full {
+  background-color: white;
+}
+
+
+.bg-info {
+    background-color: #ff52a5;
+}
+
+.bg-success {
+    background-color: #fba6e1;
+}
+
+div {
+  border-radius: 20px;
+}
+
+.js-plotly-plot .plotly .main-svg {
+    border-radius: 20px;
+}
+
+.form-control {
+    color: #e60082;
+}
+
+.air-datepicker-cell:hover {
+    background-color: #e60082;
+    color: white;
+}
+
+.air-datepicker-cell.-selected- {
+    background: #e60082;
+}
+
+.air-datepicker-cell.-selected-.-focus- {
+    background: #e60082;
+}
+
+.form-control:focus {
+    background-color: #e60082;
+    color: white;
+}
+
+
+.skin-red .left-side,.skin-red .main-sidebar,.skin-red .wrapper .main-header .navbar {
+    background-color: lightpink;
+}
+
+.skin-red .main-header .logo {
+    background-color: lightpink;
+}
+
+.skin-red .sidebar-form input[type=text] {
+    background-color: white;
+}
+

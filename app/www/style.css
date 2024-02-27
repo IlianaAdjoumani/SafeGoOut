@@ -57,7 +57,8 @@ body {
 
 
 .bg-info {
-    background-color: #ff52a5;
+    background-color: #fcecfc;
+    color: #e60082;
 }
 
 .bg-success {
@@ -96,14 +97,25 @@ div {
 
 
 .skin-red .left-side,.skin-red .main-sidebar,.skin-red .wrapper .main-header .navbar {
-    background-color: lightpink;
+    background-color: #ffbde4;
 }
 
 .skin-red .main-header .logo {
-    background-color: lightpink;
+    background-color: #e60082;
 }
 
 .skin-red .sidebar-form input[type=text] {
     background-color: white;
 }
 
+.bg-light-blue, .label-primary, .modal-primary .modal-body {
+    background-color: #e60082!important;
+}
+
+.skin-red .main-header .navbar .sidebar-toggle:hover {
+    background-color: #e60082;
+}
+
+.skin-red .main-header .logo:hover {
+    background-color: #e60082;
+}

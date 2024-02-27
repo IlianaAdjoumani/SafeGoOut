@@ -287,3 +287,59 @@ street_crime_heat_map <- function(street_crimes) {
   return(heat_map)
   
 }
+
+
+
+
+#' Get contact information for a specific police force
+#'
+#' @param force 
+#'
+#' @return police contact information
+get_police_contact <- function(force) {
+  
+  police_contact <- data.frame()
+  
+  #if missing force return empty data frame if not get police contact information
+  tryCatch({
+    if (!missing(force)) {
+      police_contact <-
+        ukpolice::ukc_force_details(force)$engagement_methods
+    }
+  }, error = function(e) {
+    police_contact <- data.frame()
+  })
+  
+  police_contact
+}
+
+#' Get contact information for a specific neighborhood
+#'
+#' @param force 
+#' @param neighbourhood
+#'
+#' @return neighbourhood contact information
+get_neighbourhood_contact <- function(force, neighbourhood) {
+  
+  neighbourhood_contact <- data.frame()
+  
+  #if missing force return empty data frame if not get neighbourhood contact information
+  tryCatch({
+    if (!missing(neighbourhood)) {
+      
+      #get the neighbourhood contact information for the selected neighbourhood
+      neighbourhood_contact <-
+        ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$contact_details %>%
+        mutate(neighbourhood = neighbourhood)
+      
+      #pivot longer the neighbourhood contact data
+      neighbourhood_contact <- neighbourhood_contact %>%
+        tidyr::pivot_longer(!neighbourhood, names_to = "Contact", values_to = "Value")
+      
+    }
+  }, error = function(e) {
+    neighbourhood_contact <- data.frame()
+  })
+  
+  neighbourhood_contact
+}

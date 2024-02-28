@@ -2,25 +2,29 @@ server <- function(input, output) {
 
   thematic::thematic_shiny()
   
-  observe({
-    updateSelectInput(inputId = "neighbourhood",
-                      choices = as.list(
-                        setNames(
-                          ukpolice::ukc_neighbourhoods(input$force)$id,
-                          ukpolice::ukc_neighbourhoods(input$force)$name
-                        )
-                      ))
+  observeEvent(input$force,{
+    if(is.null(latitude)){
+      updateSelectInput(inputId = "neighbourhood",
+                        choices = as.list(
+                          setNames(
+                            ukpolice::ukc_neighbourhoods(input$force)$id,
+                            ukpolice::ukc_neighbourhoods(input$force)$name
+                          )
+                        ))
+    }
+   
   })
   
   crime_data <- reactive({
     get_crime_data(input$force, 
-                   date = input$date,)
+                   date = input$date)
   })
   
   graph_data <- reactive({
     get_graph_data(input$force,
                    date = input$date)
   })
+  
   
   output$crime_number <- renderText({
     crime_number(crime_data())
@@ -85,10 +89,59 @@ server <- function(input, output) {
     
   })
   
-  observeEvent(input$neighbourhood,
+  
+ #Search by postcode
+  observeEvent(input$searchButton, {
+    
+    #Get the lat and lng of the postcode
+    postcode_info <- tmaptools::geocode_OSM(input$searchText)
+    
+    latitude <<- postcode_info$coords[['y']]
+    longitude <<- postcode_info$coords[['x']]
+    
+    #Identify the neighbourhood name from the co-ordinates
+    postcode_neighbourhood <-
+      ukpolice::ukc_neighbourhood_location(lat = latitude , 
+                                           lng = longitude)
+    
+    #Identify the force name and neighbourhood name
+    force <- postcode_neighbourhood$force
+    neighbourhood <- postcode_neighbourhood$neighbourhood
+    
+    #update the filters with the selected force 
+    updateSelectInput(session = getDefaultReactiveDomain(),
+                      inputId = "force",
+                      selected = force)
+    
+    #Get the neighbourhoods for the selected force
+    all_neighbourhood <- get_neighbourhoods(force)
+    
+    #Get the selected neighbourhood
+    selected_neighbourhood <-  all_neighbourhood %>%
+      filter(id == neighbourhood)
+    
+    #update the neighbourhood filter
+    updateSelectInput(
+      session = getDefaultReactiveDomain(),
+      inputId = "neighbourhood",
+      choices = as.list(setNames(
+        all_neighbourhood$id,
+        all_neighbourhood$name
+      )),
+      selected = as.list(
+        setNames(selected_neighbourhood$id,
+                 selected_neighbourhood$name)
+      )
+    )
+    
+  })
+  
+  observeEvent(c(input$neighbourhood, input$date),
                {
-                 #Street crime data
-                 street_crime <-  get_street_crime(input$force, input$neighbourhood)
+
+                 # #Street crime data
+                 street_crime <-  get_street_crime(input$force, input$neighbourhood, input$date, latitude, longitude)
+                 
                  #Police force contact information
                  police_force_contact <- get_police_contact(input$force)
                  neighbourhood_contact <- get_neighbourhood_contact(input$force, input$neighbourhood)
@@ -114,13 +167,13 @@ server <- function(input, output) {
                    map
                  })
                  
-                 output$heat_map <- leaflet::renderLeaflet({
-                   if (!is.null(street_crime) | nrow(street_crime > 0)) {
-                     map <- street_crime_heat_map(street_crime)
-                   }
-                   map
-                 })
-                 
+                 # output$heat_map <- leaflet::renderLeaflet({
+                 #   if (!is.null(street_crime) | nrow(street_crime > 0)) {
+                 #     map <- street_crime_heat_map(street_crime)
+                 #   }
+                 #   map
+                 # })
+                 # 
                  output$region <- renderUI({
                    h2(forces$name[forces$id == input$force])
                  })
@@ -198,7 +251,8 @@ server <- function(input, output) {
                    })
                  }
                  
-                 
+                 latitude <<- NULL
+                 longitude <<- NULL
                  
                },
                ignoreNULL = TRUE,

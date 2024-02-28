@@ -253,17 +253,41 @@ crime_resolution_graph_plotly <- function(data) {
 #'
 #' @return street crime df
 get_street_crime <- function(force, 
-                            neighbourhood) {
+                            neighbourhood,
+                            selected_date,
+                            latitude = NULL,
+                            longitude = NULL) {
   
-  #if missing neighbourhood return empty dataframe if not get neighbourhood specific data
-  if (missing(neighbourhood)) {
-    street_crime <- data.frame()
-  } else {
-    neigbourhood_coordinates <- ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$centre
-    street_crime <- ukpolice::ukc_street_crime(neigbourhood_coordinates$latitude, 
-                                                    neigbourhood_coordinates$longitude)
+  street_crime <- tibble::tibble()
+  
+  tryCatch({
     
+  #if missing neighbourhood return empty dataframe if not get neighbourhood specific data
+  if (!missing(neighbourhood)) {
+   
+    latest_date <- find_available_dates()$max
+    # find all the months between date and latest date
+    all_dates <- seq(as.Date(selected_date), as.Date(latest_date), by = "month")
+    
+    if(is.null(latitude) | is.null(longitude)){
+      neigbourhood_coordinates <- ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$centre
+      for (i in 1:length(all_dates)) {
+      street_crime <- rbind(street_crime, ukpolice::ukc_street_crime(neigbourhood_coordinates$latitude, 
+                                                 neigbourhood_coordinates$longitude,
+                                                 date = all_dates[i] ))
+      }
+    }else{
+      for (i in 1:length(all_dates)) {
+        street_crime <- rbind(street_crime, 
+                            ukpolice::ukc_street_crime(latitude, longitude, date = all_dates[i]))
+      }
+    }
   }
+  }, error = function(e) {
+    street_crime <- data.frame()
+  })
+   
+  return(street_crime)
 }
 
 #' Gets the street crime data and returns a summary to be displayed on the map
@@ -273,40 +297,55 @@ get_street_crime <- function(force,
 #' @return street crime summary
 street_crime_summary_map <- function(street_crimes) {
   
-  #summarise
-  street_crimes <- street_crimes %>% 
-    group_by(category, latitude, longitude, street_name) %>% 
-    summarise(count = n()) %>% 
-    arrange(desc(count))
+  tryCatch({
+    #summarise
+    street_crimes <- street_crimes %>% 
+      group_by(category, latitude, longitude, street_name) %>% 
+      summarise(count = n()) %>% 
+      arrange(desc(count))
+    
+    street_crimes$latitude <- as.numeric(street_crimes$latitude)
+    street_crimes$longitude <- as.numeric(street_crimes$longitude)
+    
+    # Normalize the crime rates for radius scaling
+    normalized_radius <- sqrt(street_crimes$count / max(street_crimes$count))
+    
+    street_crime_map <- leaflet::leaflet(street_crimes) %>%
+      leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")%>%
+      leaflet::addCircleMarkers(
+        lat = ~latitude,
+        lng = ~longitude,
+        radius = ~12 * normalized_radius,  # Adjust the scaling factor as needed
+        fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count)(street_crimes$count),
+        fillOpacity = 0.8,
+        color = "white",
+        stroke = TRUE,
+        weight = 1,
+        label = ~paste("Crime Rate:", count)
+      ) %>%
+      leaflet::addLegend(
+        pal = leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count),
+        values = ~count,
+        title = "Crime Rate",
+        position = "bottomright"
+      )
+    
+    street_crime_map
+    
+  }, error = function(e) {
+    return(empty_map())
+  })
   
-  street_crimes$latitude <- as.numeric(street_crimes$latitude)
-  street_crimes$longitude <- as.numeric(street_crimes$longitude)
+}
+
+#' Empty map
+#'
+empty_map <- function(){
   
-  # Normalize the crime rates for radius scaling
-  normalized_radius <- sqrt(street_crimes$count / max(street_crimes$count))
+  map <- leaflet::leaflet() %>% 
+    leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")
   
-  street_crime_map <- leaflet::leaflet(street_crimes) %>%
-    leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")%>%
-    leaflet::addCircleMarkers(
-      lat = ~latitude,
-      lng = ~longitude,
-      radius = ~12 * normalized_radius,  # Adjust the scaling factor as needed
-      fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count)(street_crimes$count),
-      fillOpacity = 0.8,
-      color = "white",
-      stroke = TRUE,
-      weight = 1,
-      label = ~paste("Crime Rate:", count)
-    ) %>%
-    leaflet::addLegend(
-      pal = leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count),
-      values = ~count,
-      title = "Crime Rate",
-      position = "bottomright"
-    )
-  
-  return(street_crime_map)
-  
+  return(map)
 }
 
 #' Display heat map of street crime

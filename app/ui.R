@@ -18,6 +18,7 @@ ui <- shinydashboard::dashboardPage(
     shinydashboard::sidebarSearchForm(textId = "searchText",
                       buttonId = "searchButton",
                       label = "Enter Postcode"),
+    div(class = "spacing", "or"),
     selectInput("force", "Force",
                 choices = as.list(
                   setNames(ukpolice::ukc_forces()$id,
@@ -93,17 +94,58 @@ ui <- shinydashboard::dashboardPage(
           )
         )),
         br(),
-        fluidRow(
-          column(5,
-                 plotly::plotlyOutput("crimes_resolution", height = 200)),
-          column(7,
-                 plotly::plotlyOutput("crimes_per_date", height = 200))
-        ),
-        br(),
-        fluidRow(column(
-          10,
-          plotly::plotlyOutput("type_of_crimes", height = 300)
-        ))
+        shinydashboard::tabBox(
+          #title = "Crime Analysis",
+          id = "crime_analysis",
+          width = "100%",
+          tabPanel("Crime Statistics",
+                   fluidRow(
+                     column(5,
+                            plotly::plotlyOutput("crimes_resolution", height = 200)),
+                     column(7,
+                            plotly::plotlyOutput("crimes_per_date", height = 200))
+                   ),
+                   br(),
+                   fluidRow(column(
+                     10,
+                     plotly::plotlyOutput("type_of_crimes", height = 300)
+                   ))),
+          tabPanel("Emergency Contacts",
+                   # Dynamic infoBoxes
+                   fluidRow(
+                     column(6,
+                            div(class = 'contactinfo',
+                                h5("In case of emergency, dial 999, For non-emergencies, dial 101"),
+                            )),
+                     column(4,
+                            align = 'right',
+                            actionButton("downloadContact", "Download Contact", icon = icon("download"))
+                     )
+                   ),
+                   br(),
+                   fluidRow(
+                     column(10, shinydashboard::infoBoxOutput("contactBox", width = 10))
+                   ),
+                   fluidRow(
+                     column(10,shinydashboard::infoBoxOutput("emailBox", width = 10))
+                   ),
+                   fluidRow(
+                     column(10,shinydashboard::infoBoxOutput("facebookBox", width = 10))
+                   ),
+                   fluidRow(
+                     column(10,shinydashboard::infoBoxOutput("twitterBox", width = 10))
+                   ),
+                   fluidRow(
+                     column(10,shinydashboard::infoBoxOutput("youtubeBox", width = 10))
+                   )
+                   # h4("Police"),
+                   # p("In case of emergency, dial 999"),
+                   # p("For non-emergencies, dial 101"),
+                   # p("To report a crime, dial 0800 555 111"),
+                   # p("To report a crime anonymously, dial 0800 555 111"),
+                   # p("To report a crime online, visit www.police.uk")
+                   
+          ))
         #br()
         # fluidRow(
         #   column(1, uiOutput("facebook")),

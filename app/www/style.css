@@ -206,3 +206,11 @@ b, strong {
 .nav-tabs-custom>.nav-tabs>li>a:hover {
     background-color: #ffbde4;
 }
+
+label {
+    color: #e60082;
+}
+
+a {
+    color: #e60082;
+}

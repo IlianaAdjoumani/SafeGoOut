@@ -55,6 +55,18 @@ ui <- shinydashboard::dashboardPage(
         height = 800,
         width = "100%",
         leaflet::leafletOutput("map", height = 600)
+      ),
+      shinydashboard::box(
+        h2("Immediate Assistance"),
+        background = "light-blue",
+        solidHeader = TRUE,
+        width = "100%",
+        # create a button to send localisation to the police
+        actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
+        # create a button to call the police 
+        actionButton("call_police", "Call the police", icon = icon("phone")),
+        # create a button to message my emergency contacts
+        actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
       )
     ),
     column(
@@ -150,7 +162,35 @@ ui <- shinydashboard::dashboardPage(
                    # p("To report a crime anonymously, dial 0800 555 111"),
                    # p("To report a crime online, visit www.police.uk")
                    
-          ))
+          ),
+          
+          tabPanel("My relatives",
+                   # create input to enter relative name
+                   textInput("relative_name", "Relative name"),
+                   # create input to add relationship
+                   textInput("relative_relationship", "Relationship"),
+                   # create input to enter contact value
+                   textInput("relative_number", "Number"),
+                   # create button to add contact
+                   actionButton("add_contact", "Add contact"),
+                   # create table to display contacts and also remove them
+                   br(),
+                   br(),
+                   DT::dataTableOutput("contacts_table"),
+                   br(),
+                   #add a text input for the message to send to my relatives
+                   textAreaInput("message", "Message to send to my relatives",
+                                 value = "I don't feel safe, call me..." ),
+          ),
+          
+          tabPanel("Tips",
+          # display list of tips to stay safe
+          # free text
+          a("1. Always lock your doors and windows"),
+          br(),
+          a("2. Don't leave your keys in the door"),
+                   )
+        )
         #br()
         # fluidRow(
         #   column(1, uiOutput("facebook")),

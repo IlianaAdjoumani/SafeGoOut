@@ -204,6 +204,74 @@ server <- function(input, output) {
                ignoreNULL = TRUE,
                ignoreInit = TRUE)
   
+  # create a modal to ask the user if is sure to send location to the police
+  observeEvent(input$send_location, {
+    showModal(modalDialog(
+      title = "Send location to the police",
+      "Are you sure ?",
+      footer = tagList(
+        modalButton("Cancel"),
+        modalButton("Yes")
+      )
+    ))
+  })
+  
+  # create a modal to ask the user if is sure to call the police
+  observeEvent(input$call_police, {
+    showModal(modalDialog(
+      title = "Call the police",
+      "Are you sure ?",
+      footer = tagList(
+        modalButton("Cancel"),
+        modalButton("Yes")
+      )
+    ))
+  })
+  
+  # create a modal to ask the user if is sure to message the emergency contacts
+  observeEvent(input$message_contacts, {
+    showModal(modalDialog(
+      title = "Message my emergency contacts",
+      "Are you sure ?",
+      footer = tagList(
+        modalButton("Cancel"),
+        modalButton("Yes")
+      )
+    ))
+  })
+  
+  # create a reactive to store the contacts added by the user
+  my_relatives <- reactiveVal(data.frame(
+    Name = character(),
+    Phone = character(),
+    Relationship = character()
+  ))
+  
+  # update the my relatives reactivValue with the contacts added by the user when
+  # the add contact button is used
+  
+  observeEvent(input$add_contact, {
+    
+    my_relatives(rbind(my_relatives(), 
+                          data.frame(
+                            Name = input$relative_name,
+                            Phone = input$relative_number,
+                            Relationship = input$relative_relationship
+                          )))
+  })
+  
+  
+  output$contacts_table <- DT::renderDataTable({
+    # display each contact added by the user
+    # make sure we can delete rows
+    
+    DT::datatable(my_relatives()
+    )
+
+
+  })
+  
+  
   
   # output$officer_number <- renderText({
   #   data <- get_officer_data(input$force, input$neighbourhood)

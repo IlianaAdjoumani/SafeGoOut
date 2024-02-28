@@ -1,3 +1,7 @@
+#' Find date range of available data
+#'
+#' @return the earliest and latest date available in the UKC dataset
+
 find_available_dates <- function() {
   
   dates <- ukpolice::ukc_available() %>%

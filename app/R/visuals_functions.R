@@ -1,3 +1,10 @@
+#' Get crime data for a specific force
+#'
+#' @param force character. The name of the police force
+#' @param crime_category character. (optional) The category of the crime
+#' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#'
+#' @return crime data for the specified force
 get_crime_data <- function(force, 
                            crime_category,
                            date) {
@@ -25,6 +32,12 @@ get_crime_data <- function(force,
   return(crime_data)
 }
 
+#' Get stop and search data for a specific force to produce a graph
+#'
+#' @param force character. The name of the police force
+#' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#'
+#' @return stop and search data for the specified force 
 get_graph_data <- function(force, date) {
   
   if(missing(date)) {
@@ -43,8 +56,13 @@ get_graph_data <- function(force, date) {
   return(graph_data)
 }
 
-# Write a function that takes data and return the number of crimes
 
+
+#' Count the number of crimes in a data set
+#'
+#' @param data tibble. Crime data
+#'
+#' @return the number of crimes in the data set
 crime_number <- function(data) {
   
   crime_number <- nrow(data)
@@ -52,6 +70,11 @@ crime_number <- function(data) {
   return(crime_number)
 }
 
+#' Find the most common crime in a data set
+#'
+#' @param data tibble. Crime data
+#'
+#' @return the most common crime in the data set
 most_common_crime <- function(data) {
   
   most_common_crime_id <- data %>% 
@@ -69,8 +92,12 @@ most_common_crime <- function(data) {
 }
 
 
-# write a function to summarise officer data by force and optionally by neighbourhood
-
+#' Summarise officer data by force and optionally by neighbourhood
+#'
+#' @param force character. The name of the police force
+#' @param neighbourhood character. (optional) The name of the neighbourhood
+#'
+#' @return officer data for the specified force
 get_officer_data <- function(force, 
                              neighbourhood) {
   
@@ -84,11 +111,11 @@ get_officer_data <- function(force,
 }
 
 
-# function that takes data and returns a graph of number of crimes per date
-
-# most likely day to commit a crime
-
-
+#' Visualise the number of crimes per date 
+#'
+#' @param data tibble. Crime data
+#'
+#' @return a graph of the number of crimes per date
 number_of_crimes_per_date_graph <- function(data) {
   
   graph_data <- data %>% 
@@ -120,6 +147,11 @@ number_of_crimes_per_date_graph <- function(data) {
   
 }
 
+#' Produce an empty plot
+#'
+#' @param title character. Text to display in the plot
+#'
+#' @return an empty plot with the specified title
 empty_plot <- function(title = NULL){
   p <- plotly::plotly_empty(type = "scatter", mode = "markers") %>%
     plotly::config(
@@ -135,6 +167,11 @@ empty_plot <- function(title = NULL){
   return(p)
 } 
 
+#' Display the number of crimes per category
+#'
+#' @param data tibble. Crime data
+#'
+#' @return A graph of the number of crimes per category
 type_of_crime_graph <- function(data) {
   
   crimes_categories <- ukpolice::ukc_crime_category()
@@ -159,6 +196,12 @@ type_of_crime_graph <- function(data) {
   return(plotly_graph)
 }
 
+
+#' Visualise the outcomes of stop and search
+#'
+#' @param data tibble. Stop and search data
+#'
+#' @return a treemap of the outcomes of stop and search
 crime_resolution_graph <- function(data) {
   
   graph_data <- data %>%
@@ -177,6 +220,11 @@ crime_resolution_graph <- function(data) {
   return(graph)
 }
 
+#' Visualise the outcomes of stop and search
+#'
+#' @param data tibble. Stop and search data
+#'
+#' @return a plotly treemap of the outcomes of stop and search
 crime_resolution_graph_plotly <- function(data) {
   
   graph_data <- data %>%

@@ -71,7 +71,7 @@ ui <- shinydashboard::dashboardPage(
         p("Crime hotspots, maps, charts, data tables and analysis, customised to each neighbourhood to uncover crime trends in England"),
         background = "light-blue",
         solidHeader = FALSE,
-        height = 800,
+        #height = 800,
         width = "100%",
         fluidRow(column(
           6,
@@ -98,17 +98,22 @@ ui <- shinydashboard::dashboardPage(
           #title = "Crime Analysis",
           id = "crime_analysis",
           width = "100%",
+          height = "100%",
           tabPanel("Crime Statistics",
                    fluidRow(
                      column(5,
-                            plotly::plotlyOutput("crimes_resolution", height = 200)),
+                            #plotly::plotlyOutput("crimes_resolution", height = 200)),
+                            plotly::plotlyOutput("crimes_resolution", height = "100%")),
                      column(7,
-                            plotly::plotlyOutput("crimes_per_date", height = 200))
+                            #plotly::plotlyOutput("crimes_per_date", height = 200))
+                            plotly::plotlyOutput("type_of_crimes", height = "100%"))
                    ),
                    br(),
                    fluidRow(column(
-                     10,
-                     plotly::plotlyOutput("type_of_crimes", height = 300)
+                     12,
+                     #plotly::plotlyOutput("type_of_crimes", height = 300)
+                     plotly::plotlyOutput("crimes_per_date", height = "100%")
+                     
                    ))),
           tabPanel("Emergency Contacts",
                    # Dynamic infoBoxes

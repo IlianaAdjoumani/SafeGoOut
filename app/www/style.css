@@ -121,12 +121,12 @@ div {
 }
 
 .info-box-icon {
-  color: lightpink;
+  color: white;
   height: 80px;
 }
 
 .info-box-text, .progress-description {
-    color: lightpink;
+    color: white;
     font-weight: bold;
     font-family: math;
     font-size: small;
@@ -150,9 +150,9 @@ b, strong {
 }
 
 .btn-default {
-    background-color: #3c8dbc!important;
-    color: lightpink;
-    border-color: lightpink;
+    background-color: white !important;
+    color: #e60082;
+    border-color: #e60082;
     font-weight: bold;
     border-width: medium;
 }
@@ -167,3 +167,42 @@ b, strong {
   font-size: 18px;
 }
 
+.btn-default:hover {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+
+.btn-default:active {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.btn-default:focus {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+    background-color: #ffbde4;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #ffbde4;
+}
+
+.nav-tabs-custom>.nav-tabs>li:hover {
+    background-color: white;
+    color: #e60082;
+}
+.nav-tabs-custom>.nav-tabs>li>a:hover {
+    background-color: #ffbde4;
+}

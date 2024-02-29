@@ -15,4 +15,8 @@ find_available_dates <- function() {
               max = max))
 }
 
+get_neighbourhoods <- function(force) {
+  ukpolice::ukc_neighbourhoods(force) 
+}
+
 

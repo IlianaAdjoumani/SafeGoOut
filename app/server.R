@@ -15,14 +15,18 @@ server <- function(input, output) {
    
   })
   
-  crime_data <- reactive({
+  crime_data <- eventReactive(list(input$force, input$date, input$searchButton), {
     get_crime_data(input$force, 
-                   date = input$date)
+                   date = input$date,
+                   latitude = latitude,
+                   longitude = longitude)
   })
   
-  graph_data <- reactive({
+  graph_data <- eventReactive(list(input$force, input$date, input$searchButton), {
     get_graph_data(input$force,
-                   date = input$date)
+                   date = input$date,
+                   latitude = latitude,
+                   longitude = longitude)
   })
   
   

@@ -185,10 +185,11 @@ ui <- shinydashboard::dashboardPage(
           
           tabPanel("Tips",
           # display list of tips to stay safe
-          # free text
-          a("1. Always lock your doors and windows"),
+          a("1.Ask for Angela in hospitality venues"),
           br(),
-          a("2. Don't leave your keys in the door"),
+          a("2. Ask for ANI (which stands for 'action needed immediately') in a trained pharmacy "),
+          br(),
+          a("3. Put your palm up, tuck your thumb in, and close your fingers."),
                    )
         )
         #br()

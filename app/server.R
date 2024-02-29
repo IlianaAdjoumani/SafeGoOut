@@ -34,6 +34,12 @@ server <- function(input, output) {
     crime_number(crime_data())
   })
   
+  output$neighbourhood_name <- renderText({
+    # find the name of the neighbourhood corresponding to the selected id
+    ukpolice::ukc_neighbourhoods(input$force)[
+      ukpolice::ukc_neighbourhoods(input$force)$id == input$neighbourhood,]$name
+  })
+  
 
   output$facebook <- renderUI({
     shinydashboardPlus::socialButton(

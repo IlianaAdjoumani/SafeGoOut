@@ -79,7 +79,7 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::box(
         uiOutput("region"),
         #uiOutput("neighbourhood"),
-        h4("Sheffield City Centre"),
+        h4(textOutput("neighbourhood_name")),
         p("Crime hotspots, maps, charts, data tables and analysis, customised to each neighbourhood to uncover crime trends in England"),
         background = "light-blue",
         solidHeader = FALSE,

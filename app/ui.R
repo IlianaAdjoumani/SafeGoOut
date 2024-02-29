@@ -23,7 +23,8 @@ ui <- shinydashboard::dashboardPage(
                 choices = as.list(
                   setNames(ukpolice::ukc_forces()$id,
                            ukpolice::ukc_forces()$name)
-                )),
+                ),
+                selected = "city-of-london"),
     selectInput("neighbourhood", "Neighbourhood",
                 choices = NULL),
     

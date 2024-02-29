@@ -214,3 +214,11 @@ label {
 a {
     color: #e60082;
 }
+
+.bg-maroon {
+    background-color: white!important;
+}
+
+br {
+  line-height: 150%;
+}

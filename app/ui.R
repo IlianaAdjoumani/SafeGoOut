@@ -56,18 +56,6 @@ ui <- shinydashboard::dashboardPage(
         height = 800,
         width = "100%",
         leaflet::leafletOutput("map", height = 600)
-      ),
-      shinydashboard::box(
-        h2("Immediate Assistance"),
-        background = "light-blue",
-        solidHeader = TRUE,
-        width = "100%",
-        # create a button to send localisation to the police
-        actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
-        # create a button to call the police 
-        actionButton("call_police", "Call the police", icon = icon("phone")),
-        # create a button to message my emergency contacts
-        actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
       )
     ),
     column(
@@ -95,15 +83,30 @@ ui <- shinydashboard::dashboardPage(
             max_height = "75px",
             showcase = bsicons::bs_icon("exclamation-triangle")
           ),
-        ),
-        column(
-          6,
+          br(),
           bslib::value_box(
             value = textOutput("crime_number"),
             title = "Total number of crimes",
             theme_color = "success",
             max_height = "75px",
             showcase = bsicons::bs_icon("bar-chart")
+          )
+        ),
+        column(
+          6,
+          shinydashboard::box(
+            h2("Immediate Assistance", style="color:#e60082"),
+            background = "maroon",
+            solidHeader = TRUE,
+            width = "100%",
+            # create a button to send localisation to the police
+            actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
+            h6(""),
+            # create a button to call the police 
+            actionButton("call_police", "Call the police", icon = icon("phone")),
+            h6(""),
+            # create a button to message my emergency contacts
+            actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
           )
         )),
         br(),

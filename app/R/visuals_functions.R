@@ -3,30 +3,40 @@
 #' @param force character. The name of the police force
 #' @param crime_category character. (optional) The category of the crime
 #' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#' @param latitude numeric. (optional) The latitude of the location
+#' @param longitude numeric. (optional) The longitude of the location
 #'
 #' @return crime data for the specified force
 get_crime_data <- function(force, 
                            crime_category,
-                           date) {
+                           date,
+                           latitude = NULL,
+                           longitude = NULL) {
   
-  if (missing(crime_category) & missing(date)) {
-    crime_data <- ukpolice::ukc_crime_no_location(force)
+  if (!is.null(latitude) & !is.null(longitude)) {
+    crime_data <- ukpolice::ukc_crime_location(lat = latitude, 
+                                               lng = longitude, 
+                                               date = date)
   } else {
-    if (missing(date) | missing(crime_category)) {
-      if (missing(crime_category)) {
-        latest_date <- find_available_dates()$max
-        # find all the months between date and latest date
-        all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
-        crime_data <- tibble::tibble()
-        for (i in 1:length(all_dates)) {
-          crime_data <- rbind(crime_data, 
-                              ukpolice::ukc_crime_no_location(force, date = all_dates[i]))
-        }
-      } else if (missing(date)) {
-        crime_data <- ukpolice::ukc_crime_no_location(force, crime_category)
-      }
+    if (missing(crime_category) & missing(date)) {
+      crime_data <- ukpolice::ukc_crime_no_location(force)
     } else {
-      crime_data <- ukpolice::ukc_crime_no_location(force, crime_category, date)
+      if (missing(date) | missing(crime_category)) {
+        if (missing(crime_category)) {
+          latest_date <- find_available_dates()$max
+          # find all the months between date and latest date
+          all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
+          crime_data <- tibble::tibble()
+          for (i in 1:length(all_dates)) {
+            crime_data <- rbind(crime_data, 
+                                ukpolice::ukc_crime_no_location(force, date = all_dates[i]))
+          }
+        } else if (missing(date)) {
+          crime_data <- ukpolice::ukc_crime_no_location(force, crime_category)
+        }
+      } else {
+        crime_data <- ukpolice::ukc_crime_no_location(force, crime_category, date)
+      }
     }
   }
   return(crime_data)
@@ -36,23 +46,34 @@ get_crime_data <- function(force,
 #'
 #' @param force character. The name of the police force
 #' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#' @param latitude numeric. (optional) The latitude of the location
+#' @param longitude numeric. (optional) The longitude of the location
 #'
 #' @return stop and search data for the specified force 
-get_graph_data <- function(force, date) {
+get_graph_data <- function(force, 
+                           date,
+                           latitude = NULL,
+                           longitude = NULL) {
   
-  if(missing(date)) {
-    graph_data <- ukpolice::ukc_stop_search_no_location(force)
+  if (!is.null(latitude) & !is.null(longitude)) {
+    graph_data <- ukpolice::ukc_stop_search_location(lat = latitude, 
+                                                    lng = longitude, 
+                                                    date = date)
   } else {
-    latest_date <- find_available_dates()$max
-    # find all the months between date and latest date
-    all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
-    graph_data <- tibble::tibble()
-    for (i in 1:length(all_dates)) {
-      graph_data <- rbind(graph_data, 
-                          ukpolice::ukc_stop_search_no_location(force, date = all_dates[i]))
+  
+    if(missing(date)) {
+      graph_data <- ukpolice::ukc_stop_search_no_location(force)
+    } else {
+      latest_date <- find_available_dates()$max
+      # find all the months between date and latest date
+      all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
+      graph_data <- tibble::tibble()
+      for (i in 1:length(all_dates)) {
+        graph_data <- rbind(graph_data, 
+                            ukpolice::ukc_stop_search_no_location(force, date = all_dates[i]))
+      }
     }
   }
-  
   return(graph_data)
 }
 

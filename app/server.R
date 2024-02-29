@@ -15,19 +15,29 @@ server <- function(input, output) {
    
   })
   
-  crime_data <- reactive({
+  crime_data <- eventReactive(list(input$force, input$date, input$searchButton), {
     get_crime_data(input$force, 
-                   date = input$date)
+                   date = input$date,
+                   latitude = latitude,
+                   longitude = longitude)
   })
   
-  graph_data <- reactive({
+  graph_data <- eventReactive(list(input$force, input$date, input$searchButton), {
     get_graph_data(input$force,
-                   date = input$date)
+                   date = input$date,
+                   latitude = latitude,
+                   longitude = longitude)
   })
   
   
   output$crime_number <- renderText({
     crime_number(crime_data())
+  })
+  
+  output$neighbourhood_name <- renderText({
+    # find the name of the neighbourhood corresponding to the selected id
+    ukpolice::ukc_neighbourhoods(input$force)[
+      ukpolice::ukc_neighbourhoods(input$force)$id == input$neighbourhood,]$name
   })
   
 

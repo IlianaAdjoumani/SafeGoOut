@@ -323,32 +323,90 @@ street_crime_summary_map <- function(street_crimes) {
     street_crimes <- street_crimes %>% 
       group_by(category, latitude, longitude, street_name) %>% 
       summarise(count = n()) %>% 
-      arrange(desc(count))
+      arrange(desc(count)) %>%
+      rename("Category" = "category",
+             "Street" = "street_name",
+             "No of Crimes" = "count")
     
     street_crimes$latitude <- as.numeric(street_crimes$latitude)
     street_crimes$longitude <- as.numeric(street_crimes$longitude)
     
     # Normalize the crime rates for radius scaling
-    normalized_radius <- sqrt(street_crimes$count / max(street_crimes$count))
+    normalized_radius <- sqrt(street_crimes$`No of Crimes` / max(street_crimes$`No of Crimes`))
     
     street_crime_map <- leaflet::leaflet(street_crimes) %>%
       leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")%>%
+      # Add OSM basemap
+      leaflet::addProviderTiles(leaflet::providers$OpenStreetMap, group = "Open Street Map") %>% 
+      # Add additional basemap layers
+      leaflet:: addProviderTiles(leaflet::providers$Esri.WorldImagery, group = "ESRI World Imagery") %>% 
+      leaflet::addProviderTiles(leaflet::providers$Esri.OceanBasemap, group = "ESRI Ocean Basemap") %>% 
+      # Reset map to default setting
+      leaflet.extras::addResetMapButton() %>% 
+      # Add an inset minimap
+      leaflet::addMiniMap(
+        position = "topright",
+        tiles =  leaflet::providers$Esri.WorldStreetMap,
+        toggleDisplay = TRUE,
+        minimized = FALSE,
+        width = 100,
+        height = 100
+      ) %>%
+      # Add measurement tool
+      leaflet::addMeasure(
+        position = "topleft",
+        primaryLengthUnit = "meters",
+        secondaryLengthUnit = "kilometers",
+        primaryAreaUnit = "sqmeters"
+      ) %>%
+      # Add scale bar
+      leaflet::addScaleBar(
+        position = "bottomright",
+        options =  leaflet::scaleBarOptions(imperial = FALSE)
+      ) %>% 
+      # Add a User-Interface (UI) control to switch layers
+      leaflet::addLayersControl(
+        position = "topright",
+        baseGroups = c("ESRI Ocean Basemap", "Open Street Map","ESRI World Imagery"),
+        # Add an option in layer control to toggle layers
+        overlayGroups = c("Cirlce Markers", "Heat Map"),
+        # Choose to permanently display or collapse layers control switch
+        options =  leaflet::layersControlOptions(collapsed = TRUE)
+      ) %>%
+      leaflet::hideGroup("Heat Map") %>%
       leaflet::addCircleMarkers(
         lat = ~latitude,
         lng = ~longitude,
+        group = "Cirlce Markers",
         radius = ~12 * normalized_radius,  # Adjust the scaling factor as needed
-        fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count)(street_crimes$count),
+        fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), 
+                                           domain = street_crimes$`No of Crimes`)(street_crimes$`No of Crimes`),
         fillOpacity = 0.8,
         color = "white",
         stroke = TRUE,
         weight = 1,
-        label = ~paste("Crime Rate:", count)
+        #label = ~paste("Crime Rate:", count),
+        popup = leafpop::popupTable(street_crimes,
+                                    zcol = c( "Category",
+                                             "Street",
+                                             "No of Crimes"),
+                                    row.numbers = FALSE,
+                                    feature.id = FALSE
+        )
       ) %>%
       leaflet::addLegend(
-        pal = leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count),
-        values = ~count,
+        pal = leaflet::colorNumeric(palette = viridis::viridis(10), 
+                                    domain = street_crimes$`No of Crimes`),
+        values = ~`No of Crimes`,
         title = "Crime Rate",
         position = "bottomright"
+      ) %>%
+      leaflet.extras::addHeatmap(data = street_crimes ,
+                                 group = "Heat Map",
+                                 lng = ~longitude, 
+                                 lat = ~latitude, 
+                                 intensity = ~`No of Crimes`,
+                                 blur = 20, max = 0.05, radius = 15
       )
     
     street_crime_map

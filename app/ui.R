@@ -63,7 +63,7 @@ ui <- shinydashboard::dashboardPage(
                   setNames(ukpolice::ukc_forces()$id,
                            ukpolice::ukc_forces()$name)
                 ),
-                selected = "city-of-london"),
+                selected = "south-yorkshire"),
     selectInput("neighbourhood", "Neighbourhood",
                 choices = NULL),
     
@@ -95,19 +95,7 @@ ui <- shinydashboard::dashboardPage(
         solidHeader = TRUE,
         height = 800,
         width = "100%",
-        leaflet::leafletOutput("map", height = 600)  
-      ),
-      shinydashboard::box(
-        h2("Immediate Assistance"),
-        background = "light-blue",
-        solidHeader = TRUE,
-        width = "100%",
-        # create a button to send localisation to the police
-        actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
-        # create a button to call the police 
-        actionButton("call_police", "Call the police", icon = icon("phone")),
-        # create a button to message my emergency contacts
-        actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
+        leaflet::leafletOutput("map", height = 600)
       )
     ),
     column(
@@ -136,15 +124,30 @@ ui <- shinydashboard::dashboardPage(
             max_height = "75px",
             showcase = bsicons::bs_icon("exclamation-triangle")
           ),
-        ),
-        column(
-          6,
+          br(),
           bslib::value_box(
             value = textOutput("crime_number"),
             title = "Total number of crimes",
             theme_color = "success",
             max_height = "75px",
             showcase = bsicons::bs_icon("bar-chart")
+          )
+        ),
+        column(
+          6,
+          shinydashboard::box(
+            h2("Immediate Assistance", style="color:#e60082"),
+            background = "maroon",
+            solidHeader = TRUE,
+            width = "100%",
+            # create a button to send localisation to the police
+            actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
+            h6(""),
+            # create a button to call the police 
+            actionButton("call_police", "Call the police", icon = icon("phone")),
+            h6(""),
+            # create a button to message my emergency contacts
+            actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
           )
         )),
         br(),
@@ -232,7 +235,62 @@ ui <- shinydashboard::dashboardPage(
           a("2. Ask for ANI (which stands for 'action needed immediately') in a trained pharmacy "),
           br(),
           a("3. Put your palm up, tuck your thumb in, and close your fingers."),
+                   ),
+          
+          tabPanel("Check my drink",
+                   # create an image output to display the image of the drink
+                   column(12,
+                          imageOutput("drink_picture", height = "20%"),
+                   #img(src = "drink.png", height = 200, width = 500),
+                   br(),
+                   # display an action button with camera icon to take a picture of the drink
+                   actionButton("take_picture", "Capture", icon = icon("camera")),
+                   align = "center"
+                   ),
+                   # display the result of the drink analysis
+                   #display the result of the drink analysis in a box
+                   br(),
+                   h6(""),
+                   # click a button to analyse the drink
+                   actionButton("analyse_drink", "Analyse drink"),
+                   # create a box to give advice on the drink
+                   h6(""),
+                   fluidRow(
+                     column(6,
+                       shinydashboard::box(
+                         h2("Look out !", icon("lightbulb", class="fas fa-lightbulb")),
+                         background = "light-blue",
+                         #solidHeader = TRUE,
+                         width = "100%",
+                         # create a bullet list of advice
+                         tags$div(
+                           tags$ul(
+                             tags$li("The color of your drink has changed")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink looks cloudy")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink has excessive bubbles")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink tastes a bitter or salty")
+                           )
+                         )
+                       )
+                     )
                    )
+                   # create a list of tips to stay safe in a box
+                   
+                   
+                   )
+          
         )
         #br()
         # fluidRow(

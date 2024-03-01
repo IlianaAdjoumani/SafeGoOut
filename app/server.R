@@ -358,6 +358,46 @@ server <- function(input, output) {
     }
   )
   
+  observeEvent(input$take_picture, {
+    output$drink_picture <- renderImage({
+      list(
+          #src = "www/drink.png",
+          src = "~/app/www/drink.png",
+          #filetype = "image/jpeg",
+          contentType = "image/png"
+          #alt = "This is a chainring"
+        )
+      }, deleteFile = FALSE)
+  })
+  
+  observeEvent(input$analyse_drink, {
+    # show a spinner while the drink is being analysed
+    shinybusy::show_modal_spinner("semipolar",color = "#e60082")
+    
+    Sys.sleep(2)
+    
+    shinybusy::remove_modal_spinner()
+    
+    # show success message
+    shinyalert::shinyalert(
+      title = "The drink has been analysed",
+      text = "Success! Safe to drink.",
+      type = "success",
+      confirmButtonText = ""
+    )
+    
+    # # show a modal to inform the user that the drink has been analysed
+    # showModal(modalDialog(
+    #   title = "Drink analysis",
+    #   "The drink has been analysed",
+    #   footer = tagList(
+    #     modalButton("Close")
+    #   )
+    # ))
+    
+    
+  
+  })
   
   # output$officer_number <- renderText({
   #   data <- get_officer_data(input$force, input$neighbourhood)

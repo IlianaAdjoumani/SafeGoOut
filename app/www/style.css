@@ -215,6 +215,30 @@ a {
     color: #e60082;
 }
 
+.bg-maroon {
+    background-color: white!important;
+}
+
+br {
+  line-height: 150%;
+}
+
+.sweet-alert button {
+    background-color: #e60082 !important;
+}
+
+.sweet-alert .sa-icon.sa-success .sa-line {
+    height: 5px;
+    background-color: #e60082;
+}
+
+.sweet-alert h2 {
+    color: #e60082;
+}
+
+.sweet-alert p {
+    color: #e60082;
+
 .subheading{
     font-weight: 1000;
     color: greenyellow;

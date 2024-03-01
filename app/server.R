@@ -148,6 +148,12 @@ server <- function(input, output) {
   
   observeEvent(c(input$neighbourhood, input$date),
                {
+                 
+                 showModal(modalDialog(
+                   title = "Loading data",
+                   easyClose = TRUE,
+                   footer = NULL
+                 ))
 
                  # #Street crime data
                  street_crime <-  get_street_crime(input$force, input$neighbourhood, input$date, latitude, longitude)
@@ -177,13 +183,6 @@ server <- function(input, output) {
                    map
                  })
                  
-                 # output$heat_map <- leaflet::renderLeaflet({
-                 #   if (!is.null(street_crime) | nrow(street_crime > 0)) {
-                 #     map <- street_crime_heat_map(street_crime)
-                 #   }
-                 #   map
-                 # })
-                 # 
                  output$region <- renderUI({
                    h2(forces$name[forces$id == input$force])
                  })
@@ -261,8 +260,22 @@ server <- function(input, output) {
                    })
                  }
                  
+                 output$downloadContact <- downloadHandler(
+                   filename = function() {
+                     # Use the selected dataset as the suggested file name
+                     paste0("MyEmergencyContacts", ".xlsx")
+                   },
+                   content = function(file) {
+                     # Write the contacts to the xlsx file
+                     names <- list('Police Contact' = police_force_contact, 'Neighbourhood Contact' = neighbourhood_contact)
+                     openxlsx::write.xlsx(names, file)
+                   }
+                 )
+                 
                  latitude <<- NULL
                  longitude <<- NULL
+                 
+                 removeModal()
                  
                },
                ignoreNULL = TRUE,
@@ -329,12 +342,21 @@ server <- function(input, output) {
     # display each contact added by the user
     # make sure we can delete rows
     
-    DT::datatable(my_relatives()
-    )
+    DT::datatable(my_relatives())
 
 
   })
   
+  output$downloadContact <- downloadHandler(
+    filename = function() {
+      # Use the selected dataset as the suggested file name
+      paste0("MyEmergencyContacts", ".csv")
+    },
+    content = function(file) {
+      # Write the dataset to the `file` that will be downloaded
+      write.csv(data(), file)
+    }
+  )
   
   
   # output$officer_number <- renderText({

@@ -214,3 +214,16 @@ label {
 a {
     color: #e60082;
 }
+
+.subheading{
+    font-weight: 1000;
+    color: greenyellow;
+    font-size: medium;
+    font-family: ui-monospace;
+}
+
+.footer{
+    padding-top: 300px;
+    padding-left: 20px;
+    color: black;
+}

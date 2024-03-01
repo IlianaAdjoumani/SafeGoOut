@@ -5,7 +5,46 @@ ui <- shinydashboard::dashboardPage(
   
   #HEADER
   shinydashboard::dashboardHeader(
-    title = "How safe am I ?"
+    title = "How safe am I ?",
+    
+    # Dropdown menu for messages
+    shinydashboard::dropdownMenu(type = "messages", badgeStatus = "success",
+                 shinydashboard::messageItem("Dad",
+                                             "Tried Calling you, call me back.",
+                                             time = "2 hours"
+                                 ),
+                 shinydashboard::messageItem("SafeGoOut:NoReply",
+                             "Location Shared with the police.",
+                             time = "5 mins"
+                 ),
+                 shinydashboard::messageItem("Help",
+                             "Can I get some help?",
+                             time = "Today"
+                 )
+    ),
+    
+    # Dropdown menu for notifications
+    shinydashboard::dropdownMenu(type = "notifications", badgeStatus = "warning",
+                 shinydashboard::notificationItem(icon = icon("phone"), status = "info",
+                                  "Emergency Conctats Added"
+                 ),
+                 shinydashboard::notificationItem(icon = icon("warning"), status = "danger",
+                                  "Detected high crime rate"
+                 ),
+                 shinydashboard::notificationItem(icon = icon("user", lib = "glyphicon"),
+                                  status = "danger", "You changed your username"
+                 )
+    ),
+    
+    # Dropdown menu for tasks, with progress bar
+    shinydashboard::dropdownMenu(type = "tasks", badgeStatus = "danger",
+                 shinydashboard::taskItem(value = 20, color = "aqua",
+                          "Add Emergency Contacts"
+                 ),
+                 shinydashboard::taskItem(value = 60, color = "yellow",
+                          "Readme"
+                 )
+    )
     ),
 
   #SIDEBAR
@@ -36,21 +75,22 @@ ui <- shinydashboard::dashboardPage(
                        view = "months", # editing what the popup calendar shows when it opens
                        minView = "months", # shortest period visible is month not day
                        dateFormat = "yyyy-MM"
-    )
-    
+    ),
+    div(class = "footer", "Source: data.police.uk", br(), "Open Government Licence v3.0.")
   ),
   
   #BODY
   shinydashboard::dashboardBody(
-    
     includeCSS("www/style.css"),
     fluidPage(
       fluidRow(
       column(
       4,
       shinydashboard::box(
-        h2("Interactive Crime Map"),
-        p("Discover your region of interest with our interactive UK crime map. We've compiled data from records spanning all police forces in the UK, offering localized insights into public safety concerns at the street level"),
+        h2("Safety Map"),
+        div(class = "subheading",
+            "Interactive and focused on your safety"),
+        p("Discover your region of interest with our interactive safety focussed UK crime map. We've compiled data from records spanning all police forces in the UK, offering localized insights into public safety concerns at the street level"),
         background = "light-blue",
         solidHeader = TRUE,
         height = 800,
@@ -68,8 +108,9 @@ ui <- shinydashboard::dashboardPage(
       shinydashboard::box(
         uiOutput("region"),
         #uiOutput("neighbourhood"),
-        h4(textOutput("neighbourhood_name")),
-        p("Crime hotspots, maps, charts, data tables and analysis, customised to each neighbourhood to uncover crime trends in England"),
+        div(class = "subheading",
+            textOutput("neighbourhood_name")),
+        p("Crime hotspots, charts, tables and analysis, tailored to each neighbourhood to uncover crime trends in England"),
         background = "light-blue",
         solidHeader = FALSE,
         #height = 800,
@@ -140,7 +181,7 @@ ui <- shinydashboard::dashboardPage(
                             )),
                      column(4,
                             align = 'right',
-                            actionButton("downloadContact", "Download Contact", icon = icon("download"))
+                            downloadButton("downloadContact", "Download Contact", icon = icon("download"))
                      )
                    ),
                    br(),

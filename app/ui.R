@@ -194,7 +194,62 @@ ui <- shinydashboard::dashboardPage(
           a("2. Ask for ANI (which stands for 'action needed immediately') in a trained pharmacy "),
           br(),
           a("3. Put your palm up, tuck your thumb in, and close your fingers."),
+                   ),
+          
+          tabPanel("Check my drink",
+                   # create an image output to display the image of the drink
+                   column(12,
+                          imageOutput("drink_picture", height = "20%"),
+                   #img(src = "drink.png", height = 200, width = 500),
+                   br(),
+                   # display an action button with camera icon to take a picture of the drink
+                   actionButton("take_picture", "Capture", icon = icon("camera")),
+                   align = "center"
+                   ),
+                   # display the result of the drink analysis
+                   #display the result of the drink analysis in a box
+                   br(),
+                   h6(""),
+                   # click a button to analyse the drink
+                   actionButton("analyse_drink", "Analyse drink"),
+                   # create a box to give advice on the drink
+                   h6(""),
+                   fluidRow(
+                     column(6,
+                       shinydashboard::box(
+                         h2("Look out !", icon("lightbulb", class="fas fa-lightbulb")),
+                         background = "light-blue",
+                         #solidHeader = TRUE,
+                         width = "100%",
+                         # create a bullet list of advice
+                         tags$div(
+                           tags$ul(
+                             tags$li("The color of your drink has changed")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink looks cloudy")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink has excessive bubbles")
+                           )
+                         ),
+                         tags$div(
+                           tags$ul(
+                             tags$li("Your drink tastes a bitter or salty")
+                           )
+                         )
+                       )
+                     )
                    )
+                   # create a list of tips to stay safe in a box
+                   
+                   
+                   )
+          
         )
         #br()
         # fluidRow(

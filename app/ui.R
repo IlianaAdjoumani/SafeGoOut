@@ -58,10 +58,10 @@ ui <- shinydashboard::dashboardPage(
                       buttonId = "searchButton",
                       label = "Enter Postcode"),
     div(class = "spacing", "or"),
-    selectInput("force", "Force",
+    selectInput("force", "Region",
                 choices = as.list(
                   setNames(ukpolice::ukc_forces()$id,
-                           ukpolice::ukc_forces()$name)
+                           gsub("Police","", ukpolice::ukc_forces()$name))
                 ),
                 selected = "city-of-london"),
     selectInput("neighbourhood", "Neighbourhood",

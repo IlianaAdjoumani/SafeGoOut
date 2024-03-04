@@ -19,6 +19,12 @@ body {
     font-weight: normal;
 }
 
+.h2, .h3, h2, h3 {
+    font-size: 30px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
 .main-container {
   margin-left: 200px !important;
   /*margin-top: 8.25rem; */ /* only to be used when using a header*/
@@ -238,8 +244,9 @@ br {
 
 .sweet-alert p {
     color: #e60082;
+}
 
-.subheading{
+.subheading {
     font-weight: 1000;
     color: greenyellow;
     font-size: medium;
@@ -250,4 +257,8 @@ br {
     padding-top: 300px;
     padding-left: 20px;
     color: black;
+}
+
+.bslib-value-box .value-box-showcase .bi {
+    font-size: 3rem;
 }

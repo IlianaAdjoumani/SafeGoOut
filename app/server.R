@@ -99,6 +99,17 @@ server <- function(input, output) {
     
   })
   
+  output$chatbot_link <-
+    renderUI(
+      actionButton(
+        "chatbot",
+        "Chat to the bot !",
+        icon = icon("comment-dots", class= "fa-solid fa-comment-dots"),
+        width = "90%",
+        onclick ="window.open('https://chat.openai.com/g/g-LNaIaaJlZ-safegoout', '_blank')"
+      )
+    )
+  
   
  #Search by postcode
   observeEvent(input$searchButton, {
@@ -361,11 +372,8 @@ server <- function(input, output) {
   observeEvent(input$take_picture, {
     output$drink_picture <- renderImage({
       list(
-          #src = "www/drink.png",
           src = "~/app/www/drink.png",
-          #filetype = "image/jpeg",
           contentType = "image/png"
-          #alt = "This is a chainring"
         )
       }, deleteFile = FALSE)
   })

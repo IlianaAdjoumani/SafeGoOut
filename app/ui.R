@@ -54,6 +54,8 @@ ui <- shinydashboard::dashboardPage(
                      subtitle = a(href = "#", icon("circle", class = "text-success"), "SafeGoOut"),
                      # Image file should be in www/ subdir
                      image = "logo.png"),
+    uiOutput("chatbot_link"),
+    div(class = "spacing", "or"),
     shinydashboard::sidebarSearchForm(textId = "searchText",
                       buttonId = "searchButton",
                       label = "Enter Postcode"),

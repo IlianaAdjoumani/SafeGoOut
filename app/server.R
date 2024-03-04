@@ -99,6 +99,17 @@ server <- function(input, output) {
     
   })
   
+  output$chatbot_link <-
+    renderUI(
+      actionButton(
+        "chatbot",
+        "Chat to the bot !",
+        icon = icon("comment-dots", class= "fa-solid fa-comment-dots"),
+        width = "90%",
+        onclick ="window.open('https://chat.openai.com/g/g-LNaIaaJlZ-safegoout', '_blank')"
+      )
+    )
+  
   
  #Search by postcode
   observeEvent(input$searchButton, {
@@ -222,11 +233,17 @@ server <- function(input, output) {
                  #if facebook url is not empty or null render the facebook info box
                  if (!is.null(facebook_url) | length(n_facebook) > 0 ) {
                    output$facebookBox <- shinydashboard::renderInfoBox({
+                     p_url <- a("Police", 
+                              href = facebook_url, 
+                              target = "_blank", style="color:white")
+                     n_url <- a("Neighbourhood",
+                              href = n_facebook, 
+                              target = "_blank", style="color:white")
                      shinydashboard::infoBox(
                        "Facebook", 
-                       value = div( p(strong("Police "), facebook_url),
-                                    p(strong("Neighbourhood "), n_facebook)
-                       ), 
+                       value = div(p(tagList(p_url)),
+                                  p(tagList(n_url))
+                       ),
                        icon = icon("facebook"),
                        color = "light-blue",
                        fill = TRUE
@@ -236,10 +253,16 @@ server <- function(input, output) {
                  
                  if(!is.null(twitter_url) | length(n_twitter) > 0 ) {
                    output$twitterBox <- shinydashboard::renderInfoBox({
+                     p_url <- a("Police", 
+                                href = twitter_url, 
+                                target = "_blank", style="color:white")
+                     n_url <- a("Neighbourhood",
+                                 href = n_twitter, 
+                                 target = "_blank", style="color:white")
                      shinydashboard::infoBox(
                        "Twitter", 
-                       value = div( p(strong("Police "), twitter_url),
-                                    p(strong("Neighbourhood "), n_twitter)
+                       value = div( p(tagList(p_url)),
+                                    p(tagList(n_url))
                        ), 
                        icon = icon("twitter"),
                        color = "light-blue",
@@ -250,9 +273,12 @@ server <- function(input, output) {
                  
                  if(!is.null(youtube_url)) {
                    output$youtubeBox <- shinydashboard::renderInfoBox({
+                     p_url <- a("Police", 
+                                href = youtube_url, 
+                                target = "_blank", style="color:white")
                      shinydashboard::infoBox(
                        "Youtube", 
-                       value = div( p(strong("Police "), youtube_url)),
+                       value = div( p(tagList(p_url))),
                        icon = icon("youtube"),
                        color = "light-blue",
                        fill = TRUE
@@ -361,11 +387,8 @@ server <- function(input, output) {
   observeEvent(input$take_picture, {
     output$drink_picture <- renderImage({
       list(
-          #src = "www/drink.png",
           src = "~/app/www/drink.png",
-          #filetype = "image/jpeg",
           contentType = "image/png"
-          #alt = "This is a chainring"
         )
       }, deleteFile = FALSE)
   })

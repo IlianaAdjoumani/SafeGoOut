@@ -195,7 +195,7 @@ server <- function(input, output) {
                  })
                  
                  output$region <- renderUI({
-                   h2(forces$name[forces$id == input$force])
+                   h2(gsub("Police","", forces$name[forces$id == input$force]))
                  })
                  
                  output$neighbourhood <- renderUI({

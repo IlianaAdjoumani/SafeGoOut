@@ -106,50 +106,63 @@ ui <- shinydashboard::dashboardPage(
       # br(),
       #
       shinydashboard::box(
-        uiOutput("region"),
-        #uiOutput("neighbourhood"),
-        div(class = "subheading",
-            textOutput("neighbourhood_name")),
-        p("Crime hotspots, charts, tables and analysis, tailored to each neighbourhood to uncover crime trends in England"),
         background = "light-blue",
         solidHeader = FALSE,
-        #height = 800,
         width = "100%",
-        fluidRow(column(
-          6,
-          bslib::value_box(
-            value = textOutput("most_common_crime"),
-            title = "Most common crime",
-            theme_color = "info",
-            max_height = "75px",
-            showcase = bsicons::bs_icon("exclamation-triangle")
+        fluidRow(
+          column( 4,
+                  uiOutput("region"),
+                  div(class = "subheading",
+                      textOutput("neighbourhood_name")),
+                  p("Crime hotspots, charts, tables and analysis, tailored to each neighbourhood to uncover crime trends in England"),
+                  ),
+          column(
+            8,
+            shinydashboard::box(
+              h3("Immediate Assistance", style="color:#e60082"),
+              background = "maroon",
+              solidHeader = TRUE,
+              width = "100%",
+              fluidRow(
+                column(5,
+                       # create a button to send localisation to the police
+                       actionButton("send_location", "Send location to police", icon = icon("map-marker"))
+                       ),
+                column(2, 
+                       # create a button to call the police 
+                       actionButton("call_police", "Call police", icon = icon("phone"))
+                       ),
+                column(2,
+                       offset = 1,
+                       # create a button to message my emergency contacts
+                       actionButton("message_contacts", "Message My Contacts", icon = icon("envelope"))
+                       )
+                )
+              ),
+            fluidRow(
+              column(6, 
+                     bslib::value_box(
+                       value = textOutput("most_common_crime"),
+                       title = "Most common crime",
+                       theme_color = "info",
+                       height = "70px",
+                       max_height = "70px",
+                       showcase = bsicons::bs_icon("exclamation-triangle")
+                     )
+                     ),
+                column(6,
+                       bslib::value_box(
+                         value = textOutput("crime_number"),
+                         title = "Total number of crimes",
+                         theme_color = "success",
+                         height = "70px",
+                         max_height = "70px",
+                         showcase = bsicons::bs_icon("bar-chart")
+                       ) 
+                       ))
+            )
+            
           ),
-          br(),
-          bslib::value_box(
-            value = textOutput("crime_number"),
-            title = "Total number of crimes",
-            theme_color = "success",
-            max_height = "75px",
-            showcase = bsicons::bs_icon("bar-chart")
-          )
-        ),
-        column(
-          6,
-          shinydashboard::box(
-            h2("Immediate Assistance", style="color:#e60082"),
-            background = "maroon",
-            solidHeader = TRUE,
-            width = "100%",
-            # create a button to send localisation to the police
-            actionButton("send_location", "Send my location to the police", icon = icon("map-marker")),
-            h6(""),
-            # create a button to call the police 
-            actionButton("call_police", "Call the police", icon = icon("phone")),
-            h6(""),
-            # create a button to message my emergency contacts
-            actionButton("message_contacts", "Message my emergency contacts", icon = icon("envelope"))
-          )
-        )),
         br(),
         shinydashboard::tabBox(
           #title = "Crime Analysis",
@@ -160,16 +173,16 @@ ui <- shinydashboard::dashboardPage(
                    fluidRow(
                      column(5,
                             #plotly::plotlyOutput("crimes_resolution", height = 200)),
-                            plotly::plotlyOutput("crimes_resolution", height = "100%")),
+                            plotly::plotlyOutput("crimes_resolution", height = "300px")),
                      column(7,
                             #plotly::plotlyOutput("crimes_per_date", height = 200))
-                            plotly::plotlyOutput("type_of_crimes", height = "100%"))
+                            plotly::plotlyOutput("type_of_crimes", height = "300px"))
                    ),
-                   br(),
+                   #br(),
                    fluidRow(column(
                      12,
                      #plotly::plotlyOutput("type_of_crimes", height = 300)
-                     plotly::plotlyOutput("crimes_per_date", height = "100%")
+                     plotly::plotlyOutput("crimes_per_date", height = "300px")
                      
                    ))),
           tabPanel("Emergency Contacts",
@@ -226,6 +239,9 @@ ui <- shinydashboard::dashboardPage(
                    #add a text input for the message to send to my relatives
                    textAreaInput("message", "Message to send to my relatives",
                                  value = "I don't feel safe, call me..." ),
+                   # create a button to message my emergency contacts
+                   actionButton("tweet_msg", "Tweet Here", icon = icon("twitter"))
+                
           ),
           
           tabPanel("Tips",

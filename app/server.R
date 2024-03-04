@@ -157,6 +157,11 @@ server <- function(input, output) {
     
   })
   
+  observeEvent(input$tweet_msg,{
+    auth_as("twitter-auth")
+    rtweet::tweet_post(paste0(input$message, "#hackathondemo #SafeGoOut at ", Sys.time()))
+  })
+  
   observeEvent(c(input$neighbourhood, input$date),
                {
                  

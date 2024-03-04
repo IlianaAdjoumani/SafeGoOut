@@ -95,9 +95,9 @@ ui <- shinydashboard::dashboardPage(
         p("Discover your region of interest with our interactive safety focussed UK crime map. We've compiled data from records spanning all police forces in the UK, offering localized insights into public safety concerns at the street level"),
         background = "light-blue",
         solidHeader = TRUE,
-        height = 800,
+        height = 900,
         width = "100%",
-        leaflet::leafletOutput("map", height = 600)
+        leaflet::leafletOutput("map", height = 700)
       )
     ),
     column(

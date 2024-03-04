@@ -248,8 +248,9 @@ br {
 
 .subheading {
     font-weight: 1000;
-    color: greenyellow;
+    color: white;
     font-size: medium;
+    font-style: italic;
     font-family: ui-monospace;
 }
 
@@ -261,4 +262,9 @@ br {
 
 .bslib-value-box .value-box-showcase .bi {
     font-size: 3rem;
+}
+
+
+html-fill-container > .html-fill-item {
+    overflow: hidden;
 }

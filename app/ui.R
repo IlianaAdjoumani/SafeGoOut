@@ -146,8 +146,8 @@ ui <- shinydashboard::dashboardPage(
                        value = textOutput("most_common_crime"),
                        title = "Most common crime",
                        theme_color = "info",
-                       height = "70px",
-                       max_height = "70px",
+                       #height = "70px",
+                       #max_height = "80px",
                        showcase = bsicons::bs_icon("exclamation-triangle")
                      )
                      ),
@@ -156,8 +156,8 @@ ui <- shinydashboard::dashboardPage(
                          value = textOutput("crime_number"),
                          title = "Total number of crimes",
                          theme_color = "success",
-                         height = "70px",
-                         max_height = "70px",
+                         #height = "70px",
+                         #max_height = "70px",
                          showcase = bsicons::bs_icon("bar-chart")
                        ) 
                        ))

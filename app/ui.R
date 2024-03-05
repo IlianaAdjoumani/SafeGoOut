@@ -147,18 +147,20 @@ ui <- shinydashboard::dashboardPage(
                        value = textOutput("most_common_crime"),
                        title = "Most common crime",
                        theme_color = "info",
-                       height = "70px",
-                       max_height = "70px",
+                       width = 0.3,
+                       #height = "90px",
+                       #max_height = "90px",
                        showcase = bsicons::bs_icon("exclamation-triangle")
-                     )
+                       )
                      ),
                 column(6,
                        bslib::value_box(
                          value = textOutput("crime_number"),
                          title = "Total number of crimes",
                          theme_color = "success",
-                         height = "70px",
-                         max_height = "70px",
+                         width = 0.1,
+                         #height = "90px",
+                         #max_height = "90px",
                          showcase = bsicons::bs_icon("bar-chart")
                        ) 
                        ))
@@ -230,7 +232,7 @@ ui <- shinydashboard::dashboardPage(
                    # create input to add relationship
                    textInput("relative_relationship", "Relationship"),
                    # create input to enter contact value
-                   textInput("relative_number", "Number"),
+                   textInput("relative_number", "Contact Number"),
                    # create button to add contact
                    actionButton("add_contact", "Add contact"),
                    # create table to display contacts and also remove them
@@ -238,11 +240,16 @@ ui <- shinydashboard::dashboardPage(
                    br(),
                    DT::dataTableOutput("contacts_table"),
                    br(),
-                   #add a text input for the message to send to my relatives
-                   textAreaInput("message", "Message to send to my relatives",
-                                 value = "I don't feel safe, call me..." ),
-                   # create a button to message my emergency contacts
-                   actionButton("tweet_msg", "Tweet Here", icon = icon("twitter"))
+                   fluidRow(column(9,
+                                   #add a text input for the message to send to my relatives
+                                   textAreaInput("message", "Message to send to my relatives",
+                                                 value = "I don't feel safe, call me..." )),
+                            column(3,
+                                   align = "right",
+                                   # create a button to message my emergency contacts
+                                   div(class = "tweetbutton",
+                                       actionButton("tweet_msg", "Tweet Here", icon = icon("twitter"))))
+                   )
                 
           ),
           

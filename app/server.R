@@ -157,9 +157,17 @@ server <- function(input, output) {
     
   })
   
+  #Post a Message on Twitter account
+  #Currently uses twitter developer account user authentication process
   observeEvent(input$tweet_msg,{
     auth_as("twitter-auth")
-    rtweet::tweet_post(paste0(input$message, "#hackathondemo #SafeGoOut at ", Sys.time()))
+    rtweet::tweet_post(paste0(input$message, "#buildathondemo #SafeGoOut at ", Sys.time()))
+    shinyalert::shinyalert(
+      title = "Tweet sent",
+      text = "Your message has been sent",
+      type = "success",
+      confirmButtonText = "OK"
+    )
   })
   
   observeEvent(c(input$neighbourhood, input$date),

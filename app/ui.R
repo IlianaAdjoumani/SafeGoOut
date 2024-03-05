@@ -59,6 +59,7 @@ ui <- shinydashboard::dashboardPage(
     shinydashboard::sidebarSearchForm(textId = "searchText",
                       buttonId = "searchButton",
                       label = "Enter Postcode"),
+    div(class = "postcode_ex", "Eg.(S3 7XL, CT1 2SD, DN1 9WQ)"),
     div(class = "spacing", "or"),
     selectInput("force", "Region",
                 choices = as.list(

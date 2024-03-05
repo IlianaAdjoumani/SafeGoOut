@@ -143,7 +143,8 @@ number_of_crimes_per_date_graph <- function(data) {
     dplyr::mutate(day = substr(datetime, 1, 10)) %>%
     dplyr::mutate(day = as.Date(day)) %>%
     dplyr::group_by(day) %>%
-    dplyr::summarise(n = n())
+    dplyr::summarise(n = n()) %>%
+    dplyr::ungroup()
   
   graph <- ggplot2::ggplot(data = graph_data, 
                            ggplot2::aes(x = day, 

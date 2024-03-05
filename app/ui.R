@@ -71,7 +71,7 @@ ui <- shinydashboard::dashboardPage(
     
     shinyWidgets::airDatepickerInput("date",
                        label = "Start month",
-                       value = find_available_dates()$max,
+                       value = "2023-12-01",
                        maxDate = find_available_dates()$max,
                        minDate = find_available_dates()$min,
                        view = "months", # editing what the popup calendar shows when it opens

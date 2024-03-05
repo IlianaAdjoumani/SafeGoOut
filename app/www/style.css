@@ -268,3 +268,21 @@ br {
 html-fill-container > .html-fill-item {
     overflow: hidden;
 }
+
+.tweetbutton{
+    padding-top: 40px;
+    padding-right: 20px;
+}
+
+.bslib-value-box .value-box-area {
+    padding: 1rem 0rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.bslib-value-box .value-box-area>:first-child {
+    margin-top: 0;
+    margin-bottom: 0rem;
+}
+
+

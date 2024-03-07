@@ -30,7 +30,8 @@ You can access the app by following a few steps.
 <img width="398" alt="image" src="https://github.com/IlianaAdjoumani/SafeGoOut/assets/97228963/d60ae24c-6bd1-42ef-a1ee-c81da1b6694f"> <br>
 5. Copy the link to clone the repository and paste it. Choose a suitable directory to store the project.  
 <img width="399" alt="image" src="https://github.com/IlianaAdjoumani/SafeGoOut/assets/97228963/4be42f1d-5e69-4836-8d9c-cb8b1fabde8f"> <br>
-6. Now open the SafeGoOut/app/ui.R file. Depending on your previous usage of R, you may be prompted to download missing packages  
+6. First, open the SafeGoOut/app/twitter-authentication.R file. You will need to follow all the steps prompted in the file.   
+7. Now open the SafeGoOut/app/ui.R file. Depending on your previous usage of R, you may be prompted to download missing packages  
 <img width="313" alt="image" src="https://github.com/IlianaAdjoumani/SafeGoOut/assets/97228963/42a68cbb-1f2d-436b-898d-498fbe799822"> <br>
-7. Finally, you can click on "Run App" to display the app  
+8. Finally, you can click on "Run App" to display the app  
 <img width="493" alt="image" src="https://github.com/IlianaAdjoumani/SafeGoOut/assets/97228963/69c03702-699c-48db-877c-913929590b43"> <br>

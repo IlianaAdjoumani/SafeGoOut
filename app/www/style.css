@@ -19,6 +19,12 @@ body {
     font-weight: normal;
 }
 
+.h2, .h3, h2, h3 {
+    font-size: 30px;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+
 .main-container {
   margin-left: 200px !important;
   /*margin-top: 8.25rem; */ /* only to be used when using a header*/
@@ -57,7 +63,8 @@ body {
 
 
 .bg-info {
-    background-color: #ff52a5;
+    background-color: #fcecfc;
+    color: #e60082;
 }
 
 .bg-success {
@@ -96,14 +103,191 @@ div {
 
 
 .skin-red .left-side,.skin-red .main-sidebar,.skin-red .wrapper .main-header .navbar {
-    background-color: lightpink;
+    background-color: #ffbde4;
 }
 
 .skin-red .main-header .logo {
-    background-color: lightpink;
+    background-color: #e60082;
 }
 
 .skin-red .sidebar-form input[type=text] {
     background-color: white;
 }
+
+.bg-light-blue, .label-primary, .modal-primary .modal-body {
+    background-color: #e60082!important;
+}
+
+.skin-red .main-header .navbar .sidebar-toggle:hover {
+    background-color: #e60082;
+}
+
+.skin-red .main-header .logo:hover {
+    background-color: #e60082;
+}
+
+.info-box-icon {
+  color: white;
+  height: 80px;
+}
+
+.info-box-text, .progress-description {
+    color: white;
+    font-weight: bold;
+    font-family: math;
+    font-size: small;
+}
+
+.contactinfo{
+  color: black;
+  font-weight: italic;
+}
+
+.info-box-number {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+b, strong {
+    font-weight: 800;
+    color: pink;
+    font-size: small;
+    font-family: 'cursive';
+}
+
+.btn-default {
+    background-color: white !important;
+    color: #e60082;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.info-box {
+    min-height: 70px;
+    margin-bottom: 10px;
+}
+
+.spacing {
+  padding-left:100px;
+  font-size: 18px;
+}
+
+.btn-default:hover {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+
+.btn-default:active {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.btn-default:focus {
+    background-color: #e60082 !important;
+    color: white;
+    border-color: #e60082;
+    font-weight: bold;
+    border-width: medium;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+    background-color: #ffbde4;
+}
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #ffbde4;
+}
+
+.nav-tabs-custom>.nav-tabs>li:hover {
+    background-color: white;
+    color: #e60082;
+}
+.nav-tabs-custom>.nav-tabs>li>a:hover {
+    background-color: #ffbde4;
+}
+
+label {
+    color: #e60082;
+}
+
+a {
+    color: #e60082;
+}
+
+.bg-maroon {
+    background-color: white!important;
+}
+
+br {
+  line-height: 150%;
+}
+
+.sweet-alert button {
+    background-color: #e60082 !important;
+}
+
+.sweet-alert .sa-icon.sa-success .sa-line {
+    height: 5px;
+    background-color: #e60082;
+}
+
+.sweet-alert h2 {
+    color: #e60082;
+}
+
+.sweet-alert p {
+    color: #e60082;
+}
+
+.subheading {
+    font-weight: 1000;
+    color: white;
+    font-size: medium;
+    font-style: italic;
+    font-family: ui-monospace;
+}
+
+.footer{
+    padding-top: 300px;
+    padding-left: 20px;
+    color: black;
+}
+
+.bslib-value-box .value-box-showcase .bi {
+    font-size: 3rem;
+}
+
+
+html-fill-container > .html-fill-item {
+    overflow: hidden;
+}
+
+.tweetbutton{
+    padding-top: 40px;
+    padding-right: 20px;
+}
+
+.bslib-value-box .value-box-area {
+    padding: 1rem 0rem;
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.bslib-value-box .value-box-area>:first-child {
+    margin-top: 0;
+    margin-bottom: 0rem;
+}
+
+.postcode_ex{
+    padding-left: 20px;
+    color: grey;
+}
+
 

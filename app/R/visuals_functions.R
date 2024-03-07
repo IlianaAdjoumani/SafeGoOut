@@ -1,50 +1,89 @@
+#' Get crime data for a specific force
+#'
+#' @param force character. The name of the police force
+#' @param crime_category character. (optional) The category of the crime
+#' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#' @param latitude numeric. (optional) The latitude of the location
+#' @param longitude numeric. (optional) The longitude of the location
+#'
+#' @return crime data for the specified force
 get_crime_data <- function(force, 
                            crime_category,
-                           date) {
+                           date,
+                           latitude = NULL,
+                           longitude = NULL) {
   
-  if (missing(crime_category) & missing(date)) {
-    crime_data <- ukpolice::ukc_crime_no_location(force)
+  if (!is.null(latitude) & !is.null(longitude)) {
+    crime_data <- ukpolice::ukc_crime_location(lat = latitude, 
+                                               lng = longitude, 
+                                               date = date)
   } else {
-    if (missing(date) | missing(crime_category)) {
-      if (missing(crime_category)) {
-        latest_date <- find_available_dates()$max
-        # find all the months between date and latest date
-        all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
-        crime_data <- tibble::tibble()
-        for (i in 1:length(all_dates)) {
-          crime_data <- rbind(crime_data, 
-                              ukpolice::ukc_crime_no_location(force, date = all_dates[i]))
-        }
-      } else if (missing(date)) {
-        crime_data <- ukpolice::ukc_crime_no_location(force, crime_category)
-      }
+    if (missing(crime_category) & missing(date)) {
+      crime_data <- ukpolice::ukc_crime_no_location(force)
     } else {
-      crime_data <- ukpolice::ukc_crime_no_location(force, crime_category, date)
+      if (missing(date) | missing(crime_category)) {
+        if (missing(crime_category)) {
+          latest_date <- find_available_dates()$max
+          # find all the months between date and latest date
+          all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
+          crime_data <- tibble::tibble()
+          for (i in 1:length(all_dates)) {
+            crime_data <- rbind(crime_data, 
+                                ukpolice::ukc_crime_no_location(force, date = all_dates[i]))
+          }
+        } else if (missing(date)) {
+          crime_data <- ukpolice::ukc_crime_no_location(force, crime_category)
+        }
+      } else {
+        crime_data <- ukpolice::ukc_crime_no_location(force, crime_category, date)
+      }
     }
   }
   return(crime_data)
 }
 
-get_graph_data <- function(force, date) {
+#' Get stop and search data for a specific force to produce a graph
+#'
+#' @param force character. The name of the police force
+#' @param date date. (optional) The date of the crime in the format "YYYY-MM"
+#' @param latitude numeric. (optional) The latitude of the location
+#' @param longitude numeric. (optional) The longitude of the location
+#'
+#' @return stop and search data for the specified force 
+get_graph_data <- function(force, 
+                           date,
+                           latitude = NULL,
+                           longitude = NULL) {
   
-  if(missing(date)) {
-    graph_data <- ukpolice::ukc_stop_search_no_location(force)
+  if (!is.null(latitude) & !is.null(longitude)) {
+    graph_data <- ukpolice::ukc_stop_search_location(lat = latitude, 
+                                                    lng = longitude, 
+                                                    date = date)
   } else {
-    latest_date <- find_available_dates()$max
-    # find all the months between date and latest date
-    all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
-    graph_data <- tibble::tibble()
-    for (i in 1:length(all_dates)) {
-      graph_data <- rbind(graph_data, 
-                          ukpolice::ukc_stop_search_no_location(force, date = all_dates[i]))
+  
+    if(missing(date)) {
+      graph_data <- ukpolice::ukc_stop_search_no_location(force)
+    } else {
+      latest_date <- find_available_dates()$max
+      # find all the months between date and latest date
+      all_dates <- seq(as.Date(date), as.Date(latest_date), by = "month")
+      graph_data <- tibble::tibble()
+      for (i in 1:length(all_dates)) {
+        graph_data <- rbind(graph_data, 
+                            ukpolice::ukc_stop_search_no_location(force, date = all_dates[i]))
+      }
     }
   }
-  
   return(graph_data)
 }
 
-# Write a function that takes data and return the number of crimes
 
+
+#' Count the number of crimes in a data set
+#'
+#' @param data tibble. Crime data
+#'
+#' @return the number of crimes in the data set
 crime_number <- function(data) {
   
   crime_number <- nrow(data)
@@ -52,6 +91,11 @@ crime_number <- function(data) {
   return(crime_number)
 }
 
+#' Find the most common crime in a data set
+#'
+#' @param data tibble. Crime data
+#'
+#' @return the most common crime in the data set
 most_common_crime <- function(data) {
   
   most_common_crime_id <- data %>% 
@@ -69,8 +113,12 @@ most_common_crime <- function(data) {
 }
 
 
-# write a function to summarise officer data by force and optionally by neighbourhood
-
+#' Summarise officer data by force and optionally by neighbourhood
+#'
+#' @param force character. The name of the police force
+#' @param neighbourhood character. (optional) The name of the neighbourhood
+#'
+#' @return officer data for the specified force
 get_officer_data <- function(force, 
                              neighbourhood) {
   
@@ -84,18 +132,19 @@ get_officer_data <- function(force,
 }
 
 
-# function that takes data and returns a graph of number of crimes per date
-
-# most likely day to commit a crime
-
-
+#' Visualise the number of crimes per date 
+#'
+#' @param data tibble. Crime data
+#'
+#' @return a graph of the number of crimes per date
 number_of_crimes_per_date_graph <- function(data) {
   
   graph_data <- data %>% 
     dplyr::mutate(day = substr(datetime, 1, 10)) %>%
     dplyr::mutate(day = as.Date(day)) %>%
     dplyr::group_by(day) %>%
-    dplyr::summarise(n = n())
+    dplyr::summarise(n = n()) %>%
+    dplyr::ungroup()
   
   graph <- ggplot2::ggplot(data = graph_data, 
                            ggplot2::aes(x = day, 
@@ -120,6 +169,11 @@ number_of_crimes_per_date_graph <- function(data) {
   
 }
 
+#' Produce an empty plot
+#'
+#' @param title character. Text to display in the plot
+#'
+#' @return an empty plot with the specified title
 empty_plot <- function(title = NULL){
   p <- plotly::plotly_empty(type = "scatter", mode = "markers") %>%
     plotly::config(
@@ -135,6 +189,11 @@ empty_plot <- function(title = NULL){
   return(p)
 } 
 
+#' Display the number of crimes per category
+#'
+#' @param data tibble. Crime data
+#'
+#' @return A graph of the number of crimes per category
 type_of_crime_graph <- function(data) {
   
   crimes_categories <- ukpolice::ukc_crime_category()
@@ -159,6 +218,12 @@ type_of_crime_graph <- function(data) {
   return(plotly_graph)
 }
 
+
+#' Visualise the outcomes of stop and search
+#'
+#' @param data tibble. Stop and search data
+#'
+#' @return a treemap of the outcomes of stop and search
 crime_resolution_graph <- function(data) {
   
   graph_data <- data %>%
@@ -177,6 +242,11 @@ crime_resolution_graph <- function(data) {
   return(graph)
 }
 
+#' Visualise the outcomes of stop and search
+#'
+#' @param data tibble. Stop and search data
+#'
+#' @return a plotly treemap of the outcomes of stop and search
 crime_resolution_graph_plotly <- function(data) {
   
   graph_data <- data %>%
@@ -205,17 +275,41 @@ crime_resolution_graph_plotly <- function(data) {
 #'
 #' @return street crime df
 get_street_crime <- function(force, 
-                            neighbourhood) {
+                            neighbourhood,
+                            selected_date,
+                            latitude = NULL,
+                            longitude = NULL) {
   
-  #if missing neighbourhood return empty dataframe if not get neighbourhood specific data
-  if (missing(neighbourhood)) {
-    street_crime <- data.frame()
-  } else {
-    neigbourhood_coordinates <- ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$centre
-    street_crime <- ukpolice::ukc_street_crime(neigbourhood_coordinates$latitude, 
-                                                    neigbourhood_coordinates$longitude)
+  street_crime <- tibble::tibble()
+  
+  tryCatch({
     
+  #if missing neighbourhood return empty dataframe if not get neighbourhood specific data
+  if (!missing(neighbourhood)) {
+   
+    latest_date <- find_available_dates()$max
+    # find all the months between date and latest date
+    all_dates <- seq(as.Date(selected_date), as.Date(latest_date), by = "month")
+    
+    if(is.null(latitude) | is.null(longitude)){
+      neigbourhood_coordinates <- ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$centre
+      for (i in 1:length(all_dates)) {
+      street_crime <- rbind(street_crime, ukpolice::ukc_street_crime(neigbourhood_coordinates$latitude, 
+                                                 neigbourhood_coordinates$longitude,
+                                                 date = all_dates[i] ))
+      }
+    }else{
+      for (i in 1:length(all_dates)) {
+        street_crime <- rbind(street_crime, 
+                            ukpolice::ukc_street_crime(latitude, longitude, date = all_dates[i]))
+      }
+    }
   }
+  }, error = function(e) {
+    street_crime <- data.frame()
+  })
+   
+  return(street_crime)
 }
 
 #' Gets the street crime data and returns a summary to be displayed on the map
@@ -225,40 +319,113 @@ get_street_crime <- function(force,
 #' @return street crime summary
 street_crime_summary_map <- function(street_crimes) {
   
-  #summarise
-  street_crimes <- street_crimes %>% 
-    group_by(category, latitude, longitude, street_name) %>% 
-    summarise(count = n()) %>% 
-    arrange(desc(count))
+  tryCatch({
+    #summarise
+    street_crimes <- street_crimes %>% 
+      group_by(category, latitude, longitude, street_name) %>% 
+      summarise(count = n()) %>% 
+      arrange(desc(count)) %>%
+      rename("Category" = "category",
+             "Street" = "street_name",
+             "No of Crimes" = "count")
+    
+    street_crimes$latitude <- as.numeric(street_crimes$latitude)
+    street_crimes$longitude <- as.numeric(street_crimes$longitude)
+    
+    # Normalize the crime rates for radius scaling
+    normalized_radius <- sqrt(street_crimes$`No of Crimes` / max(street_crimes$`No of Crimes`))
+    
+    street_crime_map <- leaflet::leaflet(street_crimes) %>%
+      leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")%>%
+      # Add OSM basemap
+      leaflet::addProviderTiles(leaflet::providers$OpenStreetMap, group = "Open Street Map") %>% 
+      # Add additional basemap layers
+      leaflet:: addProviderTiles(leaflet::providers$Esri.WorldImagery, group = "ESRI World Imagery") %>% 
+      leaflet::addProviderTiles(leaflet::providers$Esri.OceanBasemap, group = "ESRI Ocean Basemap") %>% 
+      # Reset map to default setting
+      leaflet.extras::addResetMapButton() %>% 
+      # Add an inset minimap
+      leaflet::addMiniMap(
+        position = "topright",
+        tiles =  leaflet::providers$Esri.WorldStreetMap,
+        toggleDisplay = TRUE,
+        minimized = FALSE,
+        width = 100,
+        height = 100
+      ) %>%
+      # Add measurement tool
+      leaflet::addMeasure(
+        position = "topleft",
+        primaryLengthUnit = "meters",
+        secondaryLengthUnit = "kilometers",
+        primaryAreaUnit = "sqmeters"
+      ) %>%
+      # Add scale bar
+      leaflet::addScaleBar(
+        position = "bottomright",
+        options =  leaflet::scaleBarOptions(imperial = FALSE)
+      ) %>% 
+      # Add a User-Interface (UI) control to switch layers
+      leaflet::addLayersControl(
+        position = "topright",
+        baseGroups = c("ESRI Ocean Basemap", "Open Street Map","ESRI World Imagery"),
+        # Add an option in layer control to toggle layers
+        overlayGroups = c("Cirlce Markers", "Heat Map"),
+        # Choose to permanently display or collapse layers control switch
+        options =  leaflet::layersControlOptions(collapsed = TRUE)
+      ) %>%
+      leaflet::hideGroup("Heat Map") %>%
+      leaflet::addCircleMarkers(
+        lat = ~latitude,
+        lng = ~longitude,
+        group = "Cirlce Markers",
+        radius = ~12 * normalized_radius,  # Adjust the scaling factor as needed
+        fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), 
+                                           domain = street_crimes$`No of Crimes`)(street_crimes$`No of Crimes`),
+        fillOpacity = 0.8,
+        color = "white",
+        stroke = TRUE,
+        weight = 1,
+        #label = ~paste("Crime Rate:", count),
+        popup = leafpop::popupTable(street_crimes,
+                                    zcol = c( "Category",
+                                             "Street",
+                                             "No of Crimes"),
+                                    row.numbers = FALSE,
+                                    feature.id = FALSE
+        )
+      ) %>%
+      leaflet::addLegend(
+        pal = leaflet::colorNumeric(palette = viridis::viridis(10), 
+                                    domain = street_crimes$`No of Crimes`),
+        values = ~`No of Crimes`,
+        title = "Crime Rate",
+        position = "bottomright"
+      ) %>%
+      leaflet.extras::addHeatmap(data = street_crimes ,
+                                 group = "Heat Map",
+                                 lng = ~longitude, 
+                                 lat = ~latitude, 
+                                 intensity = ~`No of Crimes`,
+                                 blur = 20, max = 0.05, radius = 15
+      )
+    
+    street_crime_map
+    
+  }, error = function(e) {
+    return(empty_map())
+  })
   
-  street_crimes$latitude <- as.numeric(street_crimes$latitude)
-  street_crimes$longitude <- as.numeric(street_crimes$longitude)
+}
+
+#' Empty map
+#'
+empty_map <- function(){
   
-  # Normalize the crime rates for radius scaling
-  normalized_radius <- sqrt(street_crimes$count / max(street_crimes$count))
+  map <- leaflet::leaflet() %>% 
+    leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")
   
-  street_crime_map <- leaflet::leaflet(street_crimes) %>%
-    leaflet::addProviderTiles("CartoDB.VoyagerLabelsUnder")%>%
-    leaflet::addCircleMarkers(
-      lat = ~latitude,
-      lng = ~longitude,
-      radius = ~12 * normalized_radius,  # Adjust the scaling factor as needed
-      fillColor = ~leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count)(street_crimes$count),
-      fillOpacity = 0.8,
-      color = "white",
-      stroke = TRUE,
-      weight = 1,
-      label = ~paste("Crime Rate:", count)
-    ) %>%
-    leaflet::addLegend(
-      pal = leaflet::colorNumeric(palette = viridis::viridis(10), domain = street_crimes$count),
-      values = ~count,
-      title = "Crime Rate",
-      position = "bottomright"
-    )
-  
-  return(street_crime_map)
-  
+  return(map)
 }
 
 #' Display heat map of street crime
@@ -286,4 +453,60 @@ street_crime_heat_map <- function(street_crimes) {
   
   return(heat_map)
   
+}
+
+
+
+
+#' Get contact information for a specific police force
+#'
+#' @param force 
+#'
+#' @return police contact information
+get_police_contact <- function(force) {
+  
+  police_contact <- data.frame()
+  
+  #if missing force return empty data frame if not get police contact information
+  tryCatch({
+    if (!missing(force)) {
+      police_contact <-
+        ukpolice::ukc_force_details(force)$engagement_methods
+    }
+  }, error = function(e) {
+    police_contact <- data.frame()
+  })
+  
+  police_contact
+}
+
+#' Get contact information for a specific neighborhood
+#'
+#' @param force 
+#' @param neighbourhood
+#'
+#' @return neighbourhood contact information
+get_neighbourhood_contact <- function(force, neighbourhood) {
+  
+  neighbourhood_contact <- data.frame()
+  
+  #if missing force return empty data frame if not get neighbourhood contact information
+  tryCatch({
+    if (!missing(neighbourhood)) {
+      
+      #get the neighbourhood contact information for the selected neighbourhood
+      neighbourhood_contact <-
+        ukpolice::ukc_neighbourhood_specific(force, neighbourhood)$contact_details %>%
+        mutate(neighbourhood = neighbourhood)
+      
+      #pivot longer the neighbourhood contact data
+      neighbourhood_contact <- neighbourhood_contact %>%
+        tidyr::pivot_longer(!neighbourhood, names_to = "Contact", values_to = "Value")
+      
+    }
+  }, error = function(e) {
+    neighbourhood_contact <- data.frame()
+  })
+  
+  neighbourhood_contact
 }

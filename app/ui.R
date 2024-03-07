@@ -256,6 +256,8 @@ ui <- shinydashboard::dashboardPage(
           
           tabPanel("Tips",
           # display list of tips to stay safe
+          a("List of tips to stay safe"),
+          br(),
           a("1.Ask for Angela in hospitality venues"),
           br(),
           a("2. Ask for ANI (which stands for 'action needed immediately') in a trained pharmacy "),
